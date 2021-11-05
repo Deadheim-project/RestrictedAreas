@@ -32,7 +32,7 @@ namespace RestrictedAreas
         public void InitConfigs()
         {
             RestrictedAreasList = config("Server config", "RestrictedAreas", "x=100;y=100;radius=300;permittedIds=76561198053366464,7656119833896646;permissions=noBuild,noTerrain,noInteract,noTreeDamage | x=100;y=100;radius=300;permittedIds=76561198053366464,7656119833896646;permissions=noBuild,noTerrain,noInteract,noTreeDamage",
-                new ConfigDescription("Example: x=100;y=100;radius=300;permittedIds=76561198053366464,7656119833896646;permissions=noBuild,noTerrain,noInteract,noTreeDamage", null));
+                new ConfigDescription("Example: x=100;y=100;radius=300;permittedIds=76561198053366464,7656119833896646;permissions=noBuild,noTerrain,noInteract,noTreeDamage,NoWard", null));
         }
 
         ConfigEntry<T> config<T>(string group, string name, T value, ConfigDescription description, bool synchronizedSetting = true)

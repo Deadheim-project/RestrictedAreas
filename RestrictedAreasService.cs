@@ -59,6 +59,48 @@ namespace RestrictedAreas
             return true;
         }
 
+
+        public bool isWardAllowed(Vector3 vector3, string steamId)
+        {
+            List<Area> areasPlayerIsInside = GetAreasPlayerIsInside(vector3);
+            foreach (Area area in areasPlayerIsInside)
+            {
+                if (area.PermittedIds.Contains(steamId)) return true;
+
+                if (area.NoWard) return false;
+            }
+
+            return true;
+        }
+
+
+        public bool isPvpAwaysOn(Vector3 vector3, string steamId)
+        {
+            List<Area> areasPlayerIsInside = GetAreasPlayerIsInside(vector3);
+            foreach (Area area in areasPlayerIsInside)
+            {
+                if (area.PermittedIds.Contains(steamId)) return false;
+
+                if (area.PvpAlwaysOn) return true;
+            }
+
+            return true;
+        }
+
+
+        public bool isPvpAwaysOff(Vector3 vector3, string steamId)
+        {
+            List<Area> areasPlayerIsInside = GetAreasPlayerIsInside(vector3);
+            foreach (Area area in areasPlayerIsInside)
+            {
+                if (area.PermittedIds.Contains(steamId)) return false;
+
+                if (area.PvpAlwaysOff) return true;
+            }
+
+            return true;
+        }
+
         private List<Area> GetAreasPlayerIsInside(Vector3 vector3)
         {
             List<Area> areaList = BuildAreaList((int)vector3.z);
@@ -86,6 +128,9 @@ namespace RestrictedAreas
                     if (permission.ToLower() == nameof(Area.NoTerrain).ToLower()) area.NoTerrain = true;
                     if (permission.ToLower() == nameof(Area.NoInteract).ToLower()) area.NoInteract = true;
                     if (permission.ToLower() == nameof(Area.NoTreeDamage).ToLower()) area.NoTreeDamage = true;
+                    if (permission.ToLower() == nameof(Area.PvpAlwaysOff).ToLower()) area.PvpAlwaysOff = true;
+                    if (permission.ToLower() == nameof(Area.PvpAlwaysOn).ToLower()) area.PvpAlwaysOn = true;
+                    if (permission.ToLower() == nameof(Area.NoWard).ToLower()) area.NoWard = true;
                 }
 
                 areaList.Add(area);
@@ -110,6 +155,9 @@ namespace RestrictedAreas
             public bool NoTerrain { get; set; }
             public bool NoTreeDamage { get; set; }
             public bool NoInteract { get; set; }
+            public bool PvpAlwaysOn { get; set; }
+            public bool PvpAlwaysOff { get; set; }
+            public bool NoWard { get; set; }
         }
     }
 }

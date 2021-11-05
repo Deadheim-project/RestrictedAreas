@@ -9,11 +9,17 @@ namespace RestrictedAreas
         [HarmonyPatch(typeof(Player), "PlacePiece")]
         public static class PlacePiece
         {
-            private static bool Prefix()
+            private static bool Prefix(Piece piece)
             {
                 if (!Player.m_localPlayer) return true;
 
                 var service = new RestrictedAreasService();
+
+                if (piece.gameObject.name == "guard_stone" && !service.isWardAllowed(Player.m_localPlayer.transform.position, SteamUser.GetSteamID().ToString()))
+                {
+                    Player.m_localPlayer.Message(MessageHud.MessageType.Center, "You can't do that in restricted areas", 0, null);
+                    return false;
+                }
 
                 if (service.IsBuildAllowed(Player.m_localPlayer.transform.position, SteamUser.GetSteamID().ToString())) return true;
 
@@ -23,7 +29,7 @@ namespace RestrictedAreas
         }
 
         [HarmonyPatch(typeof(WearNTear), "Damage")]
-        public static class Building_Wear_N_Tear_Patch
+        public static class WearNTearDamage
         {
             private static bool Prefix(WearNTear __instance, HitData hit)
             {
@@ -55,7 +61,7 @@ namespace RestrictedAreas
         }
 
         [HarmonyPatch(typeof(Attack), "SpawnOnHitTerrain")]
-        public static class Attack_Patch
+        public static class SpawnOnHitTerrain
         {
             private static bool Prefix(Vector3 hitPoint)
             {
@@ -71,7 +77,7 @@ namespace RestrictedAreas
         }
 
         [HarmonyPatch(typeof(TerrainOp), "Awake")]
-        public static class TerrainComp_Patch
+        public static class TerrainOpAwake
         {
             private static bool Prefix(TerrainOp __instance)
             {
@@ -87,7 +93,7 @@ namespace RestrictedAreas
         }
 
         [HarmonyPatch(typeof(TreeBase), "Damage")]
-        public static class TreeBase_Modifier
+        public static class TreeBaseDamage
         {
             public static bool Prefix(TreeBase __instance, HitData hit)
             {
@@ -133,5 +139,32 @@ namespace RestrictedAreas
                 return false;
             }
         }
+
+
+        //[HarmonyPostfix]
+        //[HarmonyPatch(typeof(Game), "Update")]
+        //private static void GameUpdate()
+        //{
+        //    if (Player.m_localPlayer)
+        //    {
+        //        var service = new RestrictedAreasService();
+
+        //        if (service.isPvpAwaysOn(Player.m_localPlayer.transform.position, SteamUser.GetSteamID().ToString()))
+        //        {
+        //            InventoryGui.instance.m_pvp.isOn =  true;
+        //            Player.m_localPlayer.SetPVP(true    );
+        //            InventoryGui.instance.m_pvp.interactable = false;
+        //            return;
+        //        }
+
+        //        if (service.isPvpAwaysOff(Player.m_localPlayer.transform.position, SteamUser.GetSteamID().ToString()))
+        //        {
+        //            InventoryGui.instance.m_pvp.isOn = false;
+        //            Player.m_localPlayer.SetPVP(false);
+        //            InventoryGui.instance.m_pvp.interactable = false;
+        //            return;
+        //        }
+        //    }
+        //}
     }
 }
