@@ -12,7 +12,7 @@ namespace RestrictedAreas
     {
         public const string PluginGUID = "Detalhes.RestrictedAreas";
         public const string Name = "RestrictedAreas";
-        public const string Version = "1.0.0";
+        public const string Version = "2.0.0";
 
         public static ConfigEntry<string> RestrictedAreasList;
 

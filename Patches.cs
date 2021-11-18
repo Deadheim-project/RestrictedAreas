@@ -69,7 +69,7 @@ namespace RestrictedAreas
 
                 var service = new RestrictedAreasService();
 
-                if (service.IsTerrainAllowed(Player.m_localPlayer.transform.position, SteamUser.GetSteamID().ToString())) return true;
+                if (service.IsPickaxeAllowed(Player.m_localPlayer.transform.position, SteamUser.GetSteamID().ToString())) return true;
 
                 Player.m_localPlayer.Message(MessageHud.MessageType.Center, "You can't do that in restricted areas", 0, null);
                 return false;

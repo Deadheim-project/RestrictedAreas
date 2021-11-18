@@ -33,6 +33,19 @@ namespace RestrictedAreas
             return true;
         }
 
+        public bool IsPickaxeAllowed(Vector3 vector3, string steamId)
+        {
+            List<Area> areasPlayerIsInside = GetAreasPlayerIsInside(vector3);
+            foreach (Area area in areasPlayerIsInside)
+            {
+                if (area.PermittedIds.Contains(steamId)) return true;
+
+                if (area.NoPickaxe) return false;
+            }
+
+            return true;
+        }
+
         public bool IsInteractAllowed(Vector3 vector3, string steamId)
         {
             List<Area> areasPlayerIsInside = GetAreasPlayerIsInside(vector3);
@@ -103,8 +116,18 @@ namespace RestrictedAreas
 
         private List<Area> GetAreasPlayerIsInside(Vector3 vector3)
         {
-            List<Area> areaList = BuildAreaList((int)vector3.z);
-            return areaList.Where(area => Vector3.Distance(area.Vector, vector3) <= area.Radius).ToList();
+            Vector2 testVector = new Vector2(vector3.x, vector3.z);
+            List<Area> areaList = new List<Area>();
+
+            foreach (Area area in BuildAreaList((int)vector3.z))
+            {
+                if (Vector2.Distance(testVector, area.Vector) <= area.Radius)
+                {
+                    areaList.Add(area);
+                }
+
+            }
+            return areaList;
         }
 
         private List<Area> BuildAreaList(int z)
@@ -131,6 +154,7 @@ namespace RestrictedAreas
                     if (permission.ToLower() == nameof(Area.PvpAlwaysOff).ToLower()) area.PvpAlwaysOff = true;
                     if (permission.ToLower() == nameof(Area.PvpAlwaysOn).ToLower()) area.PvpAlwaysOn = true;
                     if (permission.ToLower() == nameof(Area.NoWard).ToLower()) area.NoWard = true;
+                    if (permission.ToLower() == nameof(Area.NoPickaxe).ToLower()) area.NoPickaxe = true;
                 }
 
                 areaList.Add(area);
@@ -143,12 +167,12 @@ namespace RestrictedAreas
         {
             public Area(int x, int y, int z, int radius, List<string> permittedIds)
             {
-                Vector = new Vector3(x, y, z);
+                Vector = new Vector2(x, y);
                 Radius = radius;
                 PermittedIds = permittedIds;
             }
 
-            public Vector3 Vector { get; set; }
+            public Vector2 Vector { get; set; }
             public int Radius { get; set; }
             public List<string> PermittedIds { get; set; }
             public bool NoBuild { get; set; }
@@ -158,6 +182,7 @@ namespace RestrictedAreas
             public bool PvpAlwaysOn { get; set; }
             public bool PvpAlwaysOff { get; set; }
             public bool NoWard { get; set; }
+            public bool NoPickaxe { get; set; }
         }
     }
 }
