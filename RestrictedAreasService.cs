@@ -17,6 +17,7 @@ namespace RestrictedAreas
                 if (area.NoBuild) return false;
             }
 
+
             return true;
         }
 
@@ -121,7 +122,7 @@ namespace RestrictedAreas
 
             foreach (Area area in BuildAreaList((int)vector3.z))
             {
-                if (Vector2.Distance(testVector, area.Vector) <= area.Radius)
+                if (Vector3.Distance(testVector, area.Vector) <= area.Radius)
                 {
                     areaList.Add(area);
                 }
@@ -167,12 +168,12 @@ namespace RestrictedAreas
         {
             public Area(int x, int y, int z, int radius, List<string> permittedIds)
             {
-                Vector = new Vector2(x, y);
+                Vector = new Vector3(x, y, z);
                 Radius = radius;
                 PermittedIds = permittedIds;
             }
 
-            public Vector2 Vector { get; set; }
+            public Vector3 Vector { get; set; }
             public int Radius { get; set; }
             public List<string> PermittedIds { get; set; }
             public bool NoBuild { get; set; }
